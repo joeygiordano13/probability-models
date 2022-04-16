@@ -6,14 +6,14 @@ with open("README.md", "r") as readme_file:
 requirements = ["numpy>=1.22.3"]
 
 setup(
-    name="models",
+    name="probability-models",
     version="0.0.1",
     author="Joseph Giordano",
     author_email="joeydanodano@gmail.com",
     description="A package to run numerical simulations for markov processes and random walks",
     long_description=readme,
     long_description_content_type="text/markdown",
-    url="https://github.com/joeygiordano13/probability-models/tree/main/models",
+    url="https://github.com/joeygiordano13/probability-models/",
     packages=find_packages(),
     install_requires=requirements,
     classifiers=[
