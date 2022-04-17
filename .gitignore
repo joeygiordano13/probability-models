@@ -130,3 +130,6 @@ dmypy.json
 
 # Venv
 prob/
+
+# DS_Store
+.DS_Store
