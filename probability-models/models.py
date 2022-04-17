@@ -7,7 +7,7 @@ import random
 import typing
 from matplotlib import pyplot as plt
 
-PROB_WIN = 0.49
+PROB_WIN = 0.64
 START_MONEY = 50
 GOAL_MONEY = 100
 
@@ -43,16 +43,10 @@ def sim(p: int, start: int, goal: int, iter: int) -> typing.Tuple[int, bool, pd.
         state = WIN if rand < p else LOSE # determine round result
         cash += 1 if state is WIN else -1 # update cash
         steps = np.append(steps, cash)
-        #print("steps", steps)
-        # increment timesteps
-        #print(f"Timestep: {t} State: {state}")
-        t += 1
+        t += 1 # increment timesteps
         # end simulation condition
         if cash >= goal or cash <= 0:
             df = pd.DataFrame(steps, columns=[f"run-{iter}"])
-            # df[f'run-{iter}'] = steps.tolist()
-            #print(df.loc[:, f"run-{iter}"])
-            #print(t, state)
             return (t, WIN, df) if cash > 0 else (t, LOSE, df) 
     # exceeded max steps
     df = pd.DataFrame(steps, columns=[f"run-{iter}"])
@@ -65,11 +59,7 @@ def display_plots(df, times, exp_time):
     Args:
         df: (pd.DataFrame) dataframe with all the cash walks you want to plot
     """
-    y_pos = 50
-    # print(df.describe())
 
-    # for column in df.iteritems():   #plotting all the cash walks
-    #     plt.plot(df[column])
     plt.plot(df)
     plt.title('Cash Walks') # plot title
     plt.xlabel('Step')  # x axis label
@@ -77,14 +67,10 @@ def display_plots(df, times, exp_time):
     plt.xlim(0, MAX_STEPS)
     plt.ylim(0, 100)
     plt.legend(bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0)
-    #plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
     plt.legend(['Walk ' + str(num) for num in range(df.shape[1])] + [' time ' + str(time) for time in times]) # legend 
-    # Print actual times
-    # for i in range(NUM_RUNS):
-    #     plt.text(-5, y_pos, f"Walk {i} - {str(times[i])}", fontsize=12)
-    #     y_pos -= 5
     # Print expected time
     plt.text(0, 110, f"Expected time: {abs(int(exp_time))}", fontsize=12)
+    # Print actual times
     plt.text(0, 107, [str(entry) for entry in times], fontsize=12)
     plt.savefig("walks.eps", format='eps')  # saves plot to file
     plt.show()  # makes plot visible  
@@ -103,11 +89,9 @@ def compute_expected_time_to_boundary(p: float, j: int, N: int) -> float:
     """
     q = 1 - p # prob lose
     # general solution to
-    # homogenous equation 4.7
-    # p = q
+    # homogeneous equation 4.7
     if p == q:
         return (j * (N - j))
-    # p dne q
     else:
         return (1 / (q - p)) * (j - (N * ((1 - pow((q / p), j) / (1 - pow((q / p), N))))))
 
@@ -120,23 +104,16 @@ def main(numiter):
     p = PROB_WIN
     start = START_MONEY
     goal = GOAL_MONEY
-
     end_times = []
     end_states = []
-
     df = pd.DataFrame()
 
-    # time: int
-    # state: int
     # Running simulation N times
     for i in range(numiter): 
         time, state, df_out = sim(p, start, goal, i)
         end_times.append(time)
         end_states.append(state)
         df = pd.concat([df, df_out])
-        # print(df.describe())
-        # df.append(df_out) -> deprecated
-
     # Print output
     for i in range(numiter):
         print(f"Iter {i}: time - {end_times[i]} state - {'WIN' if end_states[i] is WIN else 'LOSS'}")
