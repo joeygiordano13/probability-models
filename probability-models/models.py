@@ -1,5 +1,5 @@
 # models.py
-import sys
+# import sys
 import pandas as pd
 import numpy as np
 import random
@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 
 WIN = 1
 LOSE = 0
+NUM_RUNS = 3
 MAX_STEPS = 1000
 
 def sim(p, start, goal, df, iter):
@@ -25,11 +26,11 @@ def sim(p, start, goal, df, iter):
     print(f"Running gambling simulation...")
 
     t = 0 # init step
-    steps = np.array()
+    steps = np.array([])
     cash = start
     # simulation loop
     while (t < MAX_STEPS):
-        rand = random.random()
+        rand = float(random.random())
         state = WIN if rand < p else LOSE # determine round result
         cash += 1 if state is WIN else -1 # update cash
         steps.append(cash)
@@ -54,14 +55,15 @@ def display(df):
     plt.xlabel('Step')  #the x axis label
     plt.ylabel('Cash Amount')   #the y axis label
     plt.legend('Walk #' + num for num in range(df.shape[1]))    #the legend of the plot
-
-
+    plt.savefig("walks.eps", format='eps')  #saves the plot to a file
+    plt.show()  #makes the plot visible
+    
 
 def main(numiter):
     print(f"In main, calling gambling sim {numiter} times")
-    p = input("Probability of success per round")
-    start = input("Starting money")
-    goal = input("Goal money")
+    p = float(input("Probability of success per round: "))
+    start = input("Starting money: ")
+    goal = input("Goal money: ")
    
     end_times = []
     end_states = []
@@ -70,7 +72,7 @@ def main(numiter):
     
     # Running simulation N times
     for i in range(numiter): 
-        time, state = sim(p, start, goal, df)
+        time, state = sim(p, start, goal, df, i)
         end_times.append(time)
         end_states.append(state)
     # Print output
@@ -80,4 +82,4 @@ def main(numiter):
     display(df)
     
 if __name__ == "__main__":
-    main(sys.argv[0]) # iterations
+    main(NUM_RUNS) # iterations
