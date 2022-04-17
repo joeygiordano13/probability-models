@@ -30,7 +30,7 @@ def sim(p, start, goal, df, iter):
     cash = start
     # simulation loop
     while (t < MAX_STEPS):
-        rand = random.random()
+        rand = float(random.random())
         state = WIN if rand < p else LOSE # determine round result
         cash += 1 if state is WIN else -1 # update cash
         steps.append(cash)
@@ -61,7 +61,7 @@ def display(df):
 
 def main(numiter):
     print(f"In main, calling gambling sim {numiter} times")
-    p = input("Probability of success per round: ")
+    p = float(input("Probability of success per round: "))
     start = input("Starting money: ")
     goal = input("Goal money: ")
    
