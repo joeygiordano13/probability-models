@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 with open("README.md", "r") as readme_file:
     readme = readme_file.read()
 
-requirements = ["numpy>=1.22.3"]
+requirements = ["numpy>=1.22.3", "pandas>=1.4.2", "matplotlib>=3.5.1"]
 
 setup(
     name="probability-models",
