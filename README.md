@@ -13,4 +13,15 @@ Problems 2 & 3
 
 We run a simulation of the above experiment, and compute the expected time to boundary with the equation:
 
-\(p\tau_(j+1) - \tau_j + q\tau_(j-1) = -1\)
+![equation](blob/eqn.jpg)
+
+Here, the solution to the second order homogeneous equation was useful:
+
+![solution](blob/soln.jpg)
+
+The results are displayed as follows:
+
+![result1](probability-models/results/5_runs_1.png)
+
+This small simulation was produced as a demonstration for our MAP4103 (Math Modeling) Final Project.
+
