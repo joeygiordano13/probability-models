@@ -1,6 +1,5 @@
 # models.py
 # import sys
-from tracemalloc import start
 import pandas as pd
 import numpy as np
 import random
