@@ -40,10 +40,10 @@ def sim(p: int, start: int, goal: int, iter: int) -> typing.Tuple[int, bool, pd.
         t += 1 # increment timesteps
         # end simulation condition
         if cash >= goal or cash <= 0:
-            df = pd.DataFrame(steps, columns=[f"run-{iter}"])
+            df = pd.DataFrame(steps, columns=[f"Walk {iter}"])
             return (t, WIN, df) if cash > 0 else (t, LOSE, df) 
     # exceeded max steps
-    df = pd.DataFrame(steps, columns=[f"run-{iter}"])
+    df = pd.DataFrame(steps, columns=[f"Walk {iter}"])
     return (t, DRAW, df)
 
 
@@ -64,9 +64,9 @@ def display_plots(df, goal, times, exp_time):
     plt.legend(bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0)
     plt.legend(['Walk ' + str(num) for num in range(df.shape[1])] + [' time ' + str(time) for time in times]) # legend 
     # Print expected time
-    plt.text(0, 110, f"Expected time: {abs(int(exp_time))}", fontsize=12)
+    plt.text(0, 115, f"Expected time: {abs(int(exp_time))}", fontsize=12)
     # Print actual times
-    plt.text(0, 107, [str(entry) for entry in times], fontsize=12)
+    plt.text(0, 109, [str(entry) for entry in times], fontsize=12)
     plt.savefig("walks.eps", format='eps')  # saves plot to file
     plt.show()  # makes plot visible  
 
@@ -123,11 +123,23 @@ def main():
     # Displays statistics from the walks
     print('\n')
     print(df.describe())
+
     # Average end times
-    print(f'Average Walk End: {np.mean(end_times)}')
-    wins = np.sum(pd.Series(end_states) > 0)
+    print('\n')
+    average_end = np.mean(end_times)
+    no_draws_average = np.mean([num for num in end_times if num < MAX_STEPS])
+
+    if average_end != no_draws_average:
+        print(f'Average Walk End (Including DRAWS): {average_end}')
+        print(f'Average Walk End (Excluding DRAWS): {no_draws_average}')
+    else:
+        print(f'Average Walk End: {np.mean(end_times)}')
+
+    # Win rate
+    wins = np.sum([state for state in end_states if state > 0])
     print(f'Win Rate: {wins}/{numiter} = {wins/numiter}')
     print('\n')
+    
     # Display output in matplot
     print('\n')
     display_plots(df, goal, end_times, boundary_pred)
