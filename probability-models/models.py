@@ -6,14 +6,9 @@ import random
 import typing
 from matplotlib import pyplot as plt
 
-PROB_WIN = 0.64
-START_MONEY = 50
-GOAL_MONEY = 100
-
 WIN = 1
 LOSE = 0
 DRAW = -1
-NUM_RUNS = 5
 MAX_STEPS = 1000
 
 def sim(p: int, start: int, goal: int, iter: int) -> typing.Tuple[int, bool, pd.DataFrame]:
@@ -51,8 +46,9 @@ def sim(p: int, start: int, goal: int, iter: int) -> typing.Tuple[int, bool, pd.
     df = pd.DataFrame(steps, columns=[f"run-{iter}"])
     return (t, DRAW, df)
 
+
 # Todo: add types
-def display_plots(df, times, exp_time):
+def display_plots(df, goal, times, exp_time):
     """
     Plots a series of columns in one graph
     Args:
@@ -64,7 +60,7 @@ def display_plots(df, times, exp_time):
     plt.xlabel('Step')  # x axis label
     plt.ylabel('Cash Amount')   # y axis label
     plt.xlim(0, MAX_STEPS)
-    plt.ylim(0, 100)
+    plt.ylim(0, goal)
     plt.legend(bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0)
     plt.legend(['Walk ' + str(num) for num in range(df.shape[1])] + [' time ' + str(time) for time in times]) # legend 
     # Print expected time
@@ -95,14 +91,15 @@ def compute_expected_time_to_boundary(p: float, j: int, N: int) -> float:
         return (1 / (q - p)) * (j - (N * ((1 - pow((q / p), j) / (1 - pow((q / p), N))))))
 
 
-def main(numiter):
-    print(f"In main, calling gambling sim {numiter} times")
-    #p = float(input("Probability of success per round: "))
-    #start = int(input("Starting money: "))
-    #goal = int(input("Goal money: "))
-    p = PROB_WIN
-    start = START_MONEY
-    goal = GOAL_MONEY
+def main():
+    numiter = int(input("Number of iterations: "))
+    p = float(input("Probability of success per round: "))
+    start = int(input("Starting money: "))
+    goal = int(input("Goal money: "))
+
+    # p = PROB_WIN
+    # start = START_MONEY
+    # goal = GOAL_MONEY
     end_times = []
     end_states = []
     df = pd.DataFrame()
@@ -113,13 +110,27 @@ def main(numiter):
         end_times.append(time)
         end_states.append(state)
         df = pd.concat([df, df_out])
-    # Print output
-    for i in range(numiter):
-        print(f"Iter {i}: time - {end_times[i]} state - {'WIN' if end_states[i] is WIN else 'LOSS'}")
+
     # Compute expected time to boundary
     boundary_pred =  compute_expected_time_to_boundary(p, start, goal)
+    
+     # Print output
+    print('\n')
+    for i in range(numiter):
+        print(f"Iter {i}: time - {end_times[i]} state - {'WIN' if end_states[i] is WIN else 'LOSE' if end_states[i] is LOSE else 'DRAW'}")
+        
+    
+    # Displays statistics from the walks
+    print('\n')
+    print(df.describe())
+    # Average end times
+    print(f'Average Walk End: {np.mean(end_times)}')
+    wins = np.sum(pd.Series(end_states) > 0)
+    print(f'Win Rate: {wins}/{numiter} = {wins/numiter}')
+    print('\n')
     # Display output in matplot
-    display_plots(df, end_times, boundary_pred)
+    print('\n')
+    display_plots(df, goal, end_times, boundary_pred)
     
 if __name__ == "__main__":
-    main(NUM_RUNS) # iterations
+    main() # iterations
