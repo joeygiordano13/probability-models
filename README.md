@@ -15,7 +15,7 @@ We run a simulation of the above experiment, and compute the expected time to bo
 
 ![equation](blob/eqn.jpg)
 
-Here, the solution to the second order homogeneous equation was useful:
+Here, the solution to the second order nonhomogeneous equation was useful:
 
 ![solution](blob/soln.jpg)
 
